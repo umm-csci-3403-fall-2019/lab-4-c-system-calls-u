@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
 
 #define BUF_SIZE 1024
@@ -15,24 +16,24 @@ int copy_non_vowels(int num_chars, char* in_buf, char* out_buf) {
      * and this function should return the number of non-vowels that
      * that were copied over.
      */
-	int index
+	int index = 0;
 	int counter = 0;
 
 	while(index<num_chars){
-		if(!hasVowel(str[index])){
+		if(!is_vowel(in_buf[index])){
 			counter++;
 		}
 		index++;
 	}
 
-	out_buf = (char*) calloc (counter, sizeof(char));
 
 	for(int i=0,n=0;i<index;i++){
-		if(!hasVowel(str[i])){
-			newStr[n] = str[i];
+		if(!is_vowel(in_buf[i])){
+			out_buf[n] = in_buf[i];
 			n++;
 		}
 	}
+	printf("out_buf: %s\n",(char*) out_buf);
 	return counter;
 }
 
@@ -43,7 +44,23 @@ void disemvowel(FILE* inputFile, FILE* outputFile) {
      * in a buffer of data, copy the non-vowels to the output buffer, and
      * use fwrite to write that out.
      */
+
+	char in_buffer[BUF_SIZE];
+	char out_buffer[BUF_SIZE];
+
+	int num_chars =fread(in_buffer,1,BUF_SIZE,inputFile);
+       	while(num_chars !=0){
+		printf("num_chars: %d\n", num_chars);
+		int nonvowels = copy_non_vowels(num_chars,in_buffer,out_buffer);	
+		printf("nonvowels: %d\n", nonvowels);
+		printf("out_buffer: %s\n", out_buffer);
+		fwrite(out_buffer,1,nonvowels,outputFile);
+		num_chars= fread(in_buffer, 1, BUF_SIZE, inputFile);
+	}
+
 }
+
+//When entering input first run requires ctrl-d, but subsequent runs can use just enter. ctrl-d causes weird question-marky things in output
 
 int main(int argc, char *argv[]) {
     // You should set these to `stdin` and `stdout` by default
@@ -52,10 +69,13 @@ int main(int argc, char *argv[]) {
     FILE *inputFile;
     FILE *outputFile;
 
+    inputFile = stdin;
+    outputFile = stdout;
     // Code that processes the command line arguments
     // and sets up inputFile and outputFile.
 
     disemvowel(inputFile, outputFile);
+    fclose(outputFile);
 
     return 0;
 }
