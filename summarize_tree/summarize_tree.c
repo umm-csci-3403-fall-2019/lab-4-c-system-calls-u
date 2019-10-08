@@ -6,6 +6,10 @@
 #include <unistd.h>
 #include <string.h>
 
+#include <sys/types.h>
+#include <dirent.h>
+#include <libgen.h>
+
 static int num_dirs, num_regular;
 
 bool is_dir(const char* path) {
@@ -16,6 +20,17 @@ bool is_dir(const char* path) {
    * return value from stat in case there is a problem, e.g., maybe the
    * the file doesn't actually exist.
    */
+	
+	
+	struct stat buffer;
+	int n = stat(path,&buffer);
+	if(n==0){
+	    return S_ISDIR(buffer.st_mode);
+	}else{
+		exit(n);
+	}
+
+
 }
 
 /* 
@@ -36,12 +51,32 @@ void process_directory(const char* path) {
    * with a matching call to chdir() to move back out of it when you're
    * done.
    */
+
+	DIR *dir;
+    	char* dp;
+
+
+	chdir(path);
+	if((dir =opendir(path))==NULL){
+		perror("Cannot open dir");
+		exit(1);
+	}
+	while((dp = readdir(dir) -> d_name) != NULL){
+		if(dp!="."&&dp!=".."){
+			process_path(dp);
+		}
+	}
+	closedir(dir);
+	chdir("..");
+
+
 }
 
 void process_file(const char* path) {
   /*
    * Update the number of regular files.
    */
+	num_regular++;
 }
 
 void process_path(const char* path) {
