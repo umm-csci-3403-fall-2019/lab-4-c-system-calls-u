@@ -33,7 +33,7 @@ int copy_non_vowels(int num_chars, char* in_buf, char* out_buf) {
 			n++;
 		}
 	}
-	printf("out_buf: %s\n",(char*) out_buf);
+	//printf("out_buf: %s\n",(char*) out_buf);
 	return counter;
 }
 
@@ -50,14 +50,14 @@ void disemvowel(FILE* inputFile, FILE* outputFile) {
 
 	int num_chars =fread(in_buffer,1,BUF_SIZE,inputFile);
        	while(num_chars !=0){
-		printf("num_chars: %d\n", num_chars);
+		//printf("num_chars: %d\n", num_chars);
 		int nonvowels = copy_non_vowels(num_chars,in_buffer,out_buffer);	
-		printf("nonvowels: %d\n", nonvowels);
-		printf("out_buffer: %s\n", out_buffer);
+		//printf("nonvowels: %d\n", nonvowels);
+		//printf("out_buffer: %s\n", out_buffer);
 		fwrite(out_buffer,1,nonvowels,outputFile);
 		num_chars= fread(in_buffer, 1, BUF_SIZE, inputFile);
 	}
-
+	
 }
 
 //When entering input first run requires ctrl-d, but subsequent runs can use just enter. ctrl-d causes weird question-marky things in output
@@ -69,8 +69,19 @@ int main(int argc, char *argv[]) {
     FILE *inputFile;
     FILE *outputFile;
 
-    inputFile = stdin;
-    outputFile = stdout;
+	//printf("argc: %d\n", argc);
+
+    if(argc > 1){
+    	inputFile = fopen( argv[1], "r" );
+	//printf("argv[1]: %s\n", argv[1]);
+    }else{
+    	inputFile = stdin;
+    }
+    if(argc > 2){
+	    outputFile = fopen( argv[2], "w" );
+    }else{
+    	outputFile = stdout;
+    }
     // Code that processes the command line arguments
     // and sets up inputFile and outputFile.
 
