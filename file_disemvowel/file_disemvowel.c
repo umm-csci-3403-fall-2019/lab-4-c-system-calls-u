@@ -86,6 +86,7 @@ int main(int argc, char *argv[]) {
     // and sets up inputFile and outputFile.
 
     disemvowel(inputFile, outputFile);
+    fclose(inputFile);
     fclose(outputFile);
 
     return 0;
