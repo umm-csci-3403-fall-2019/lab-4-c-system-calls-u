@@ -55,19 +55,33 @@ void process_directory(const char* path) {
 	DIR *dir;
     	char* dp;
 
+	num_dirs++;
 
+//	printf("Current path: %s\n", path);
+
+	char cwd[1024];
+	getcwd(cwd, sizeof(cwd));
+
+//	printf("cwd: %s\n", cwd);
 	chdir(path);
-	if((dir =opendir(path))==NULL){
+	if((dir =opendir("."))==NULL){
 		perror("Cannot open dir");
 		exit(1);
 	}
-	while((dp = readdir(dir) -> d_name) != NULL){
-		if(dp!="."&&dp!=".."){
+	//strcmp
+	struct dirent* ent;
+	while((ent = readdir(dir)) != NULL){
+		dp = ent -> d_name;
+//		printf("dp: %s\n", dp);
+		if(strcmp(dp,".")!=0&&strcmp(dp,"..")!=0){
 			process_path(dp);
 		}
+//		printf("Done with %s\n", dp);
 	}
+//	printf("Done with while\n");
 	closedir(dir);
-	chdir("..");
+	chdir(cwd);
+	
 
 
 }
@@ -80,6 +94,7 @@ void process_file(const char* path) {
 }
 
 void process_path(const char* path) {
+//	printf("In process_path: %s\n", path);
   if (is_dir(path)) {
     process_directory(path);
   } else {
