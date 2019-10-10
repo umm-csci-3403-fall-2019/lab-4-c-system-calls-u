@@ -1,9 +1,17 @@
+#include <ftw.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <signal.h>
+
 
 static int num_dirs, num_regular;
 
 
 static int callback(const char *fpath, const struct stat *sb, int typeflag) {
     // Define stuff here
+    if(typeflag == FTW_D){num_dirs++;}
+    if(typeflag == FTW_F){num_regular++;}
+    return 0;
 }
 
 #define MAX_FTW_DEPTH 16
@@ -26,5 +34,5 @@ int main(int argc, char** argv) {
    printf("There were %d directories.\n", num_dirs);
    printf("There were %d regular files.\n", num_regular);
 
-
+   return 0;
 }
