@@ -1,7 +1,10 @@
-#!/env/bin/bash
-$dir=$1;
+#!/usr/bin/env bash
 
-find -f $dir | wc -l | printf("There were %d regular files.\n", $numfiles);
+dir=$1
 
-find -d $dir | wc -l | printf("There were %d directories.\n", num_dirs);
+numdir=$(find $dir -type d | wc -l)
+echo "There were" $numdir "directories."
+
+numfiles=$(find $dir -type f | wc -l)
+echo "There were" $numfiles "regular files."
 
